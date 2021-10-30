@@ -41,7 +41,7 @@ run().catch(console.dir);
 
 
 app.get('/',(req,res)=>{
-    res.send('Tour server is running ');
+    res.send('Tour server is running ohh okk ');
 })
 
 app.listen(port,()=>{
