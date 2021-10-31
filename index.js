@@ -1,11 +1,11 @@
-
-
-const { MongoClient } = require('mongodb');
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 5000;
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 const cors = require('cors');
+
+
+const app = express();
+const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors());
@@ -18,17 +18,20 @@ async function run(){
 
     try{
         await client.connect();
-        const database = client.db('tourDetails');
-        const usersCollection = database.collection('details');
-        //GET API
-        app.get('/details',async (req,res)=>{
-            res.send('details')
-        })
+         const database = client.db('tour_detail');
+         const packageCollection = database.collection('packages');
+         //Get Api
+         app.get('/packages', async(req,res)=>{
+             const cursor = packageCollection.find({});
+             const packages = await cursor.toArray();
+             res.send(packages);
+         })
+       
     }
 
 
 finally{
-    await client.close();
+    // await client.close();
 }
 
 
