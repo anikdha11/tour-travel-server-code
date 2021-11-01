@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 require('dotenv').config();
 const cors = require('cors');
 const objectId = require('mongodb').ObjectId;
+const { query } = require('express');
 
 
 const app = express();
@@ -21,6 +22,7 @@ async function run() {
         await client.connect();
         const database = client.db('tour_detail');
         const packageCollection = database.collection('packages');
+        const bookingCollection = database.collection('booked')
         //Get Api
         app.get('/packages', async (req, res) => {
             const cursor = packageCollection.find({});
@@ -34,6 +36,26 @@ async function run() {
             const package = await packageCollection.findOne(query);
             res.json(package);
 
+        })
+        //Add booking Api
+        app.post('/booked', async(req,res)=>{
+            const booking = req.body;
+           const booked = await bookingCollection.insertOne(booking)
+            res.json(booked)
+        })
+        //Get Booked Api 
+        app.get('/booked',async(req,res)=>{
+            const cursor = bookingCollection.find({});
+            const booked =await cursor.toArray();
+            res.send(booked)
+        })
+        //Delete Api
+        app.delete('/booked/:id', async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id:objectId(id)};
+            const result = await bookingCollection.deleteOne(query);
+            res.json(result);
+            
         })
 
     }
